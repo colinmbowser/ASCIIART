@@ -1,6 +1,9 @@
 package com.colinmbowser.asciiart;
 
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ASCIIART
 {
@@ -8,14 +11,18 @@ public class ASCIIART
     {
         System.out.println("Hello, World People! new comment");
 
-        JFrame frame = new JFrame();
-        frame.getContentPane().add(new imagetests());
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(200, 200);
-        frame.setVisible(true);
+        BufferedImage image;
+        try
+        {
+            image = ImageIO.read(new File(args[0]));
+        }
+        catch (IOException e)
+        {
+            //e.printStackTrace();
+            System.out.println("Error: Failed to open image \"" + args[0] + "\"");
+            return;
+        }
+        System.out.println("Width: " + image.getWidth() + "\nHeight: " + image.getHeight());
     }
-
-
-
 }
+
