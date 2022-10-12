@@ -10,7 +10,9 @@ public class ASCIIART
         String imageName = args[0].substring(0, args[0].indexOf("."));
 
         BufferedImage firstImage = FirstImageReader.copyFirstImage(args);
-        GrayScale.makeGrayScale(firstImage, imageName);
+        BufferedImage grayScaleImage = GrayScale.makeGrayScale(firstImage, imageName);
+        BufferedImage firstEdgeImage = EdgeFinder.makeEdgePicture(grayScaleImage, imageName);
+        //BufferedImage lastEdgeImage = EdgeFinder.makeEdgePicture(firstEdgeImage);
 
     }
 }
