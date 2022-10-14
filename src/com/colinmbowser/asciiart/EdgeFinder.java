@@ -8,63 +8,65 @@ import java.io.IOException;
 
 public class EdgeFinder
 {
-    public static BufferedImage makeEdgePicture(BufferedImage GrayScaleImage, String imageName)
+    public static BufferedImage makeEdgePicture(BufferedImage changingImage, String imageName, String[] args)
     {
-        BufferedImage EdgeImage = GrayScaleImage;
 
-        int[][] edgeColors = new int[GrayScaleImage.getWidth()][GrayScaleImage.getHeight()];
-        int maxGradient = -1;
+        int[] nextTo = getMethod(args[1]);
 
-        for (int w = 1; w < GrayScaleImage.getWidth() - 1; w++)
+        BufferedImage EdgeImage = changingImage;
+
+        int[][] edgePixelColors = new int[changingImage.getWidth()][changingImage.getHeight()];
+
+        for (int w = 1; w < changingImage.getWidth() - 1; w++)
         {
-            for (int h = 1; h < GrayScaleImage.getHeight() - 1; h++)
+            for (int h = 1; h < changingImage.getHeight() - 1; h++)
             {
 
-                double topleft = getGrayScale(GrayScaleImage.getRGB(w - 1, h - 1));
-                double midleft = getGrayScale(GrayScaleImage.getRGB(w - 1, h));
-                double botleft = getGrayScale(GrayScaleImage.getRGB(w - 1, h + 1));
+                double topleft = getGrayScaleInt(changingImage.getRGB(w - 1, h - 1));
+                double midleft = getGrayScaleInt(changingImage.getRGB(w - 1, h));
+                double botleft = getGrayScaleInt(changingImage.getRGB(w - 1, h + 1));
 
-                double topmid = getGrayScale(GrayScaleImage.getRGB(w, h - 1));
-                double midmid = getGrayScale(GrayScaleImage.getRGB(w, h));
-                double botmid = getGrayScale(GrayScaleImage.getRGB(w, h + 1));
+                double topmid = getGrayScaleInt(changingImage.getRGB(w, h - 1));
+                double midmid = getGrayScaleInt(changingImage.getRGB(w, h));
+                double botmid = getGrayScaleInt(changingImage.getRGB(w, h + 1));
 
-                double topright = getGrayScale(GrayScaleImage.getRGB(w + 1, h - 1));
-                double midright = getGrayScale(GrayScaleImage.getRGB(w + 1, h));
-                double botright = getGrayScale(GrayScaleImage.getRGB(w + 1, h + 1));
+                double topright = getGrayScaleInt(changingImage.getRGB(w + 1, h - 1));
+                double midright = getGrayScaleInt(changingImage.getRGB(w + 1, h));
+                double botright = getGrayScaleInt(changingImage.getRGB(w + 1, h + 1));
 
-                double grayX =  ((topleft * -1 ) + (midleft * 0 ) + (botleft * 1 )) +
-                                ((topmid * -2  ) + (midmid * 0  ) + (botmid * 2  )) +
-                                ((topright * -1) + (midright * 0) + (botright * 1));
+                double grayX =  ((topleft  * -nextTo[1]) + (midleft  * 0) + (botleft  * nextTo[1])) +
+                                ((topmid   * -nextTo[0]) + (midmid   * 0) + (botmid   * nextTo[0])) +
+                                ((topright * -nextTo[1]) + (midright * 0) + (botright * nextTo[1]));
 
-                double grayY =  ((topleft * -1) + (midleft * -2) + (botleft * -1)) +
-                                ((topmid * 0  ) + (midmid * 0  ) + (botmid * 0  )) +
-                                ((topright * 1) + (midright * 2) + (botright * 1));
+                double grayY =  ((topleft  * -nextTo[1]) + (midleft  * -nextTo[0]) + (botleft  * -nextTo[1])) +
+                                ((topmid   * 0         ) + (midmid   * 0         ) + (botmid   * 0         )) +
+                                ((topright * nextTo[1] ) + (midright * nextTo[0] ) + (botright * nextTo[1] ));
 
-                double gval = Math.sqrt((grayX * grayX) + (grayY * grayY));
-                int g = (int) gval;
-                edgeColors[w][h] = g;
+                double gradval = Math.sqrt((grayX * grayX) + (grayY * grayY));
+                int col = (int) gradval;
+                edgePixelColors[w][h] = col;
             }
         }
 
-        for (int w = 1; w < GrayScaleImage.getWidth() - 1; w++)
+        for (int w = 1; w < changingImage.getWidth() - 1; w++)
         {
-            for (int h = 1; h < GrayScaleImage.getHeight() - 1; h++)
+            for (int h = 1; h < changingImage.getHeight() - 1; h++)
             {
-                int edgeColor = edgeColors[w][h];
+                int edgeColor = edgePixelColors[w][h];
                 if (edgeColor > 255)
                 {
                     edgeColor = 255;
                 }
-                if (edgeColor < 60)
+                if (edgeColor < 50)
                 {
                     edgeColor = 0;
                 }
                 edgeColor = 255 - edgeColor;
                 int setColor = new Color(edgeColor, edgeColor, edgeColor).getRGB();
                 EdgeImage.setRGB(w, h, setColor);
-                //EdgeImage.setRGB(w, h, edgeColor);
             }
         }
+
         try
         {
             //ImageIO.write(grayScale, "png", new File(imageName + "_gray_scale.png"));
@@ -80,7 +82,20 @@ public class EdgeFinder
         }
     }
 
-    public static int  getGrayScale(int rgb)
+    public static int[] getMethod(String method) {
+        switch(method.toLowerCase()) {
+            case "prewitt": return new int[] { 1,  1};
+            case "scharr":  return new int[] {10,  3};
+            case "sobel":   return new int[] { 2,  1};
+
+            default:
+                System.out.println("Unknown edge method");
+                System.exit(0);
+                return null;
+        }
+    }
+
+    public static int getGrayScaleInt(int rgb)
     {
         int r = (rgb >> 16) & 0xff;
         int g = (rgb >> 8) & 0xff;

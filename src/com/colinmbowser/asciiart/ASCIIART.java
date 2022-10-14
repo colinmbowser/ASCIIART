@@ -1,5 +1,7 @@
 package com.colinmbowser.asciiart;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ASCIIART
@@ -11,9 +13,10 @@ public class ASCIIART
 
         BufferedImage firstImage = FirstImageReader.copyFirstImage(args);
         BufferedImage grayScaleImage = GrayScale.makeGrayScale(firstImage, imageName);
-        BufferedImage firstEdgeImage = EdgeFinder.makeEdgePicture(grayScaleImage, imageName);
-        //BufferedImage lastEdgeImage = EdgeFinder.makeEdgePicture(firstEdgeImage);
-
+        BufferedImage edgeImage = EdgeFinder.makeEdgePicture(grayScaleImage, imageName, args);
+        //AsciiFinder.AsciiBrain(EdgeImage, imageName);
+        AsciiFinder asciiTextArtMaker = new AsciiFinder();
+        asciiTextArtMaker.AsciiBrain(edgeImage, imageName, args);
     }
 }
 
