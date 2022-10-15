@@ -69,7 +69,6 @@ public class EdgeFinder
 
         try
         {
-            //ImageIO.write(grayScale, "png", new File(imageName + "_gray_scale.png"));
             ImageIO.write(EdgeImage, "png", new File(imageName + "_edge.png"));
             return EdgeImage;
         }

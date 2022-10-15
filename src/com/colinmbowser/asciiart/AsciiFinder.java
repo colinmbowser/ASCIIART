@@ -3,9 +3,12 @@ package com.colinmbowser.asciiart;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AsciiFinder
 {
@@ -19,13 +22,11 @@ public class AsciiFinder
         //int i = 0; used to make directory to check all the characters are outputting correctly
         String characterSet = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
-        //HashMap<Character, BufferedImage> chars = new HashMap<>();
-
         char[] chararacters = characterSet.toCharArray();
-        for (char c : chararacters)
+        for (char masterKey : chararacters)
         {
-            BufferedImage charImage = getCharToImage(c);// get the image
-            chars.put(c, charImage);
+            BufferedImage charImage = getCharToImage(masterKey);// get the image
+            chars.put(masterKey, charImage);
             // used to make directory to check all the characters are outputting correctly
 /*            try
             {
@@ -40,14 +41,14 @@ public class AsciiFinder
             i++;*/
         }
         BufferedImage newEdgeImage = distortImage(edgeImage, args[2]);
-        TextFileManip(newEdgeImage);
+        TextFileManip(newEdgeImage, imageName);
     }
 
     public BufferedImage getCharToImage(char CharText)
     {
         BufferedImage charImage2 = new BufferedImage(1, 1, BufferedImage.TYPE_BYTE_GRAY);
         Graphics2D graph2d2 = charImage2.createGraphics();
-        Font font = new Font("monospaced", Font.BOLD, 32); //move this to the upper class and pass it in
+        Font font = new Font("monospaced", Font.BOLD, 32);
         graph2d2.setFont(font);
         FontMetrics fontm = graph2d2.getFontMetrics();
         textWidth = fontm.stringWidth(String.valueOf(CharText));
@@ -114,10 +115,67 @@ public class AsciiFinder
         return distortedImage;
     }
 
-    public void TextFileManip(BufferedImage newEdgeImage)
+    public void TextFileManip(BufferedImage newEdgeImage, String imageName)
     {
+        String asciiTxtImage ="";
 
 
+        for (int h = 0; h < heightTextSquaresNum; h++)
+        {
+            System.out.println("Written " + h + " line out of " + heightTextSquaresNum);
+            for (int w = 0; w < widthTextSquaresNum; w++)
+            {
+                int bestMatch = 0;
+                char bestChar = ' ';
 
+                int posW = w * textWidth;
+                int posH = h * textHeight;
+                for (Map.Entry<Character, BufferedImage> entry : chars.entrySet())
+                {
+                    char changeC = entry.getKey();
+                    BufferedImage charImage = entry.getValue();
+                    char charVal = changeC;
+                    int matchVal = 0;
+
+                    int textH = 0;
+                    for (int smallRectH = posH; smallRectH < posH + textHeight; smallRectH++)
+                    {
+                        int textW = 0;
+                        for (int smallRectW = posW; smallRectW < posW + textWidth; smallRectW++)
+                        {
+                            if (newEdgeImage.getRGB(smallRectW, smallRectH) == charImage.getRGB(textW, textH))
+                            {
+                                matchVal++;
+                            }
+                            textW++;
+                        }
+                        textH++;
+                    }
+                    if (matchVal > bestMatch)
+                    {
+                        bestMatch = matchVal;
+                        bestChar = charVal;
+                    }
+                }
+                asciiTxtImage = asciiTxtImage + bestChar;
+            }
+            asciiTxtImage = asciiTxtImage + "\n";
+        }
+        System.out.println("Written " + heightTextSquaresNum + " line out of " + heightTextSquaresNum);
+        System.out.println("100% Written");
+        try
+        {
+            //saves text image to new text file
+            BufferedWriter TextArtDrawer = new BufferedWriter(new FileWriter(imageName + ".txt"));
+            TextArtDrawer.write(asciiTxtImage);
+            TextArtDrawer.flush();
+            TextArtDrawer.close();
+        }
+        catch (IOException e)
+        {
+            //e.printStackTrace();
+            System.out.println("Error: Failed to save text file \"" + imageName + "_asciiArt.txt\"");
+        }
+        //System.out.println(asciiTxtImage); // will output image in terminal
     }
 }
