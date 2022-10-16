@@ -83,6 +83,7 @@ public class AsciiFinder
         double desiredHeight;
         double factoringScale;
 
+        // i have a headache
         desiredWidth = Integer.parseInt(desiredWidthString);
         oldImageWidth = edgeImage.getWidth();
         oldImageHeight = edgeImage.getHeight();
@@ -90,7 +91,7 @@ public class AsciiFinder
         widthTextSquaresNum = (int)Math.round(desiredWidth / textWidth);
         newImageWidth = widthTextSquaresNum * textWidth;
         factoringScale = (double)newImageWidth / oldImageWidth;
-        //System.out.println(factoringScale);
+        //System.out.println(factoringScale); // to verify factoringscale is decimal
 
         desiredHeight = factoringScale * oldImageHeight;
         heightTextSquaresNum = (int)desiredHeight / textHeight;
@@ -101,7 +102,7 @@ public class AsciiFinder
         g.drawImage(edgeImage, 0, 0, newImageWidth, newImageHeight, null);
         g.dispose();
 
-        try
+/*        try
         {
             //ImageIO.write(grayScale, "png", new File(imageName + "_gray_scale.png"));
             ImageIO.write(distortedImage, "png", new File( "distorted_edge.png"));
@@ -110,7 +111,7 @@ public class AsciiFinder
         {
             //e.printStackTrace();
             System.out.println("Error: Failed to save edge image distorted_edge.png\"");
-        }
+        }*/
 
         return distortedImage;
     }

@@ -1,30 +1,24 @@
 # Overview
 
-{Important!  Do not say in this section that this is college assignment.  Talk about what you are trying to accomplish as a software engineer to further your learning.}
 
-{Provide a description the software that you wrote to demonstrate the Java language.}
-
-{Describe your purpose for writing this software.}
-
+This program will take a image input along with the type of edge detection you want to use (Perwitt, Sobel, or Scharr) as well as the desired width of the image output. The code will then save the grayscale version of the image, then save the edgge detected version of the image, then save the distorted image, and finally save the ascii art to a txt file after comparisons have been done.
+I saw this and was confused about what it was so i decided to give it a shot, it was very difficult but it was fun to do and the output is fun to recieve.
 {Provide a link to your YouTube demonstration.  It should be a 4-5 minute demo of the software running and a walkthrough of the code.  Focus should be on sharing what you learned about the language syntax.}
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Ascii Art Demo](https://youtu.be/XHYuvVLa-oI)
 
 # Development Environment
 
-{Describe the tools that you used to develop the software}
-
-{Describe the programming language that you used and any libraries.}
+I used IntelliJ to program this function in Java.
+Libraries used are: imageIO, Buffered Image, filewriter, hashmap and many more.
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
-* [Web Site Name](http://url.link.goes.here)
-* [Web Site Name](http://url.link.goes.here)
+* [Sobel Operator Wikipedia](https://en.wikipedia.org/wiki/Sobel_operator)
+* [image comparison geeks for geeks](https://www.geeksforgeeks.org/image-processing-in-java-comparision-of-two-images/)
 
 # Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-* Item 1
-* Item 2
-* Item 3
+* Clean the code to make it looks better
+* Add comments to the code is easier to understand
+* Optimize the code so it doesnt take 3+ minutes to output the txt file
